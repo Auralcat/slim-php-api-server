@@ -4,6 +4,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 require '../vendor/autoload.php';
 
+/* Call the objects in the client using host/slimapp/index.php/hello/whatever */
 $app = new \Slim\App;
 $app->get('/hello/{name}', function(Request $request, Response $response) {
             $name = $request->getAttribute('name');
@@ -12,4 +13,7 @@ $app->get('/hello/{name}', function(Request $request, Response $response) {
             return $response;
         });
     $app->run();
+
+// Customer Routes
+require '../src/routes/customers.php'
 ?>
