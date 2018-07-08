@@ -9,11 +9,10 @@ require '../vendor/autoload.php';
 require '../src/config/db.php';
 
 // Enable basic logging
-ini_set("log_errors", 1);
-ini_set("error_log", "/tmp/slimapp-logs/slimapp_error.log");
-error_log("Hello Errors!");
-
 date_default_timezone_set("America/Sao_Paulo");
+ini_set("log_errors", 1);
+ini_set("error_log", "/tmp/php-error.log");
+error_log("This is a sample error message.");
 
 $app = new \Slim\App();
 
