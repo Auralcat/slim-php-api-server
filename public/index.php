@@ -16,18 +16,6 @@ error_log("This is a sample error message.");
 
 $app = new \Slim\App();
 
-// Testing a logging endpoint
-$app->get('/simplelog', function(Request $request, Response $response) {
-    // Info level
-    $this->logger->write("This is an info level message from Logger class library", Silalahi\Slim\Logger::INFO);
-    // Critical Level
-    $this->logger->write("This is a critical level message from Logger class library", Silalahi\Slim\Logger::CRITICAL);
-    // Debug level
-    $this->logger->write("This is a debug level message from Logger class library", Silalahi\Slim\Logger::DEBUG);
-
-    return $response->write("Hello, I'm a logging endpoint");
-});
-
 /* Call the objects in the client using host/slimapp/index.php/hello/whatever */
 $app->get('/hello/{name}', function(Request $request, Response $response) {
     $name = $request->getAttribute('name');
