@@ -46,4 +46,44 @@ $app->get('/api/customer/{id}', function(Request $request, Response $response) {
         echo '{"error": {"text": ' . $e->getMessage() . '}';
     }
 });
+
+// Add customer to database
+$app->post('/api/customer/add', function(Request $request, Response $response) {
+    // Can't you do that with an array?
+    $first_name = $request->getParam('first_name');
+    $last_name = $request->getParam('last_name');
+    $email = $request->getParam('email');
+    $phone = $request->getParam('phone');
+    $address = $request->getParam('address');
+    $city = $request->getParam('city');
+    $state = $request->getParam('state');
+    $sql = "INSERT INTO customers "
+         . "(first_name, last_name, phone, email, address, city, state) "
+         . "VALUES "
+         . "(:first_name, :last_name, :phone, :email, :address, :city, :state)";
+    try
+    {
+        // Get DB object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindParam(':first_name', $first_name);
+        $stmt->bindParam(':last_name',  $last_name);
+        $stmt->bindParam(':phone',      $phone);
+        $stmt->bindParam(':email',      $email);
+        $stmt->bindParam(':address',    $address);
+        $stmt->bindParam(':city',       $city);
+        $stmt->bindParam(':state',      $state);
+
+        $stmt->execute();
+
+        echo '{"notice": {"text": "Customer Added"}}';
+    } catch(PDOException $e)
+    {
+        echo '{"error": {"text": ' . $e->getMessage() . '}';
+    }
+});
 ?>
