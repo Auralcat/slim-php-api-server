@@ -34,13 +34,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 $app = new \Slim\App();
 
-/* Call the objects in the client using host/slimapp/index.php/hello/whatever */
-$app->get('/hello/{name}', function(Request $request, Response $response) {
-    $name = $request->getAttribute('name');
-    $response->getBody()->write("Hello, $name");
+// Twig view integration starts here............................................
+$container = $app->getContainer();
 
+// Register Twig View helper in app dependency injection container
+$container['view'] = function($c) {
+    $view = new \Slim\Views\Twig('../views/', [
+        'cache' => '/tmp/cache/'
+    ]);
+
+    // Instantiate and add Slim specific extension
+    $router = $c->get('router');
+    $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));
+    $view->addExtension(new \Slim\Views\TwigExtension($router, $uri));
+
+    return $view;
+};
+
+// Define named route
+$app->get('/hello/{name}', function(Request $request, Response $response, $args) {
+    return $this->view->render($response, 'profile.html', [
+        'name' => $args['name']
+    ]);
+})->setName('profile');
+
+// Render from string
+$app->get('/hi/{name}', function(Request $request, Response $response, $args) {
+    $str = $this->view->fetchFromString('<p>Hi, my name is {{ name }}.</p>', [
+        'name' => $args['name']
+    ]);
+    $response->getBody()->write($str);
     return $response;
 });
+
+// Twig view integration ends here..............................................
 
 // Customer Routes
 require '../src/routes/customers.php';
