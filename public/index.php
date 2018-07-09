@@ -58,6 +58,13 @@ $app->get('/hello/{name}', function(Request $request, Response $response, $args)
     ]);
 })->setName('profile');
 
+// Creating a main view for the project
+$app->get('/main', function(Request $request, Response $response, $args) {
+    return $this->view->render($response, 'main.html', [
+
+    ]);
+})->setName('main');
+
 // Render from string
 $app->get('/hi/{name}', function(Request $request, Response $response, $args) {
     $str = $this->view->fetchFromString('<p>Hi, my name is {{ name }}.</p>', [
